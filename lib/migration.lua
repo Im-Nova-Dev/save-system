@@ -103,11 +103,20 @@ function migration:run(data, from_version)
         v, v + 1
       )
     end
-    local ok, result = pcall(migration_info.fn, data)
+    local results = { pcall(migration_info.fn, data) }
+    local ok = results[1]
     if not ok then
       return false, string.format(
         "Migration v%d -> v%d failed: %s",
-        v, v + 1, tostring(result)
+        v, v + 1, tostring(results[2])
+      )
+    end
+    local result = results[2]
+    local err_str = results[3]
+    if err_str then
+      return false, string.format(
+        "Migration v%d -> v%d error: %s",
+        v, v + 1, tostring(err_str)
       )
     end
     if result == nil then

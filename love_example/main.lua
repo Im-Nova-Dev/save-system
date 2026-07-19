@@ -1,8 +1,6 @@
 -- LÖVE entry point for the save system example.
--- Sets up love.filesystem paths and delegates to the shared example.
--- The example.lua is symlinked/copied to the same dir so require() resolves.
-
-package.path = "lib/?.lua;" .. package.path
+-- Run: love save_system/love_example/
+-- (the build script copies lib/ and save_manager.lua here before bundling)
 
 local SaveManager = require("save_manager")
 

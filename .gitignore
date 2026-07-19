@@ -1,0 +1,5 @@
+save_demo/
+love_example/lib/
+love_example/save_manager.lua
+love_example/*.love
+/tmp/save_system_test_*

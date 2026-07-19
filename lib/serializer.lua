@@ -29,19 +29,13 @@ do
     return string.format("\\u%04x", string.byte(c))
   end
 
-  local function type_name(v)
-    local t = type(v)
-    if t == "number" then
-      if v ~= v or v == math.huge or v == -math.huge then
-        return "nan_inf"
-      end
-    end
-    return t
+  local function is_nan_or_inf(v)
+    return v ~= v or v == math.huge or v == -math.huge
   end
 
   function json_encode(v, pretty, indent)
     indent = indent or ""
-    local t = type_name(v)
+    local t = type(v)
     if t == "nil" then
       return "null"
     elseif t == "boolean" then
@@ -49,10 +43,7 @@ do
     elseif t == "string" then
       return "\"" .. v:gsub("[%c\\\"]", escape_char) .. "\""
     elseif t == "number" then
-      if v ~= v then return "null"
-      elseif v == math.huge then return "null"
-      elseif v == -math.huge then return "null"
-      end
+      if is_nan_or_inf(v) then return "null" end
       if v == math.floor(v) and v < 9007199254740992 and v > -9007199254740992 then
         return string.format("%.0f", v)
       end
@@ -102,8 +93,6 @@ do
         end
         return "{" .. table.concat(parts, ",") .. "}"
       end
-    elseif t == "nan_inf" then
-      return "null"
     end
     error(("Cannot serialize type '%s'"):format(type(v)))
   end
@@ -257,7 +246,7 @@ local function base64_encode(data)
       local idx = (b >> (6 * (4 - j))) & 0x3F
       result[#result + 1] = b64chars:sub(idx + 1, idx + 1)
     end
-    for i = 1, pad do result[#result - pad + i] = "=" end
+    for j = 1, pad do result[#result - pad + j] = "=" end
   end
   return table.concat(result)
 end

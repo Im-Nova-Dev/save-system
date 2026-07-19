@@ -105,11 +105,11 @@ function fs.create_dir(dir)
   end
   -- Plain Lua: shell-quote the path and use mkdir -p
   local quoted = dir:gsub("'", "'\\''")
-  local ok = os.execute(("mkdir -p '%s' 2>/dev/null"):format(quoted))
-  if ok then return true, nil end
+  local r1 = os.execute(("mkdir -p '%s' 2>/dev/null"):format(quoted))
+  if r1 == 0 or r1 == true then return true, nil end
   -- Fallback: try just mkdir
-  ok = os.execute(("mkdir '%s' 2>/dev/null"):format(quoted))
-  if ok then return true, nil end
+  local r2 = os.execute(("mkdir '%s' 2>/dev/null"):format(quoted))
+  if r2 == 0 or r2 == true then return true, nil end
   return false, "Failed to create directory: " .. dir
 end
 
