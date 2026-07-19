@@ -103,6 +103,16 @@ T.describe("Migration errors", function()
     T.assert(err:match("returned nil"), "should mention nil return")
   end)
 
+  T.it("captures error string as second return from migration", function()
+    local m = migration.new()
+    m:add(1, function(d)
+      return d, "Custom error from migration"
+    end)
+    local ok, err = m:run({ save_version = 1 }, 1)
+    T.assert(not ok, "should reject error return")
+    T.assert(err:match("Custom error"), "should include custom error: " .. tostring(err))
+  end)
+
 end)
 
 T.describe("Migration planning and listing", function()

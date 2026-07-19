@@ -1,6 +1,6 @@
 -- LÖVE entry point for the save system example.
+-- Build with: ./scripts/build_love.sh
 -- Run: love save_system/love_example/
--- (the build script copies lib/ and save_manager.lua here before bundling)
 
 local SaveManager = require("save_manager")
 

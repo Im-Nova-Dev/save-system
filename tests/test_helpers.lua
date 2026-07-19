@@ -52,11 +52,15 @@ function test_helpers.assert_eq(a, b, path)
     error(("Type mismatch at %s: %s vs %s"):format(path, type(a), type(b)), 2)
   end
   if type(a) == "table" then
-    local seen_a, seen_b = {}, {}
+    local seen_a = {}
     for k in pairs(a) do
       seen_a[k] = true
+      if b == nil then
+        error(("Missing table at %s: expected table, got nil"):format(path), 2)
+      end
       test_helpers.assert_eq(a[k], b[k], path .. "." .. tostring(k))
     end
+    if b == nil then return end
     for k in pairs(b) do
       if not seen_a[k] then
         error(("Extra key at %s: %s"):format(path, tostring(k)), 2)
